@@ -108,6 +108,7 @@ from copyreg import constructor
 from http.client import MOVED_PERMANENTLY
 from itertools import count
 from math import *
+import profile
 from ssl import _PasswordType
 print(ceil(3.14))    # 올림 4
 print(floor(3.14))   # 내림 3
@@ -665,3 +666,191 @@ print("수수료 {0} 원이며, 잔액은 {1} 원입니다.".format(commission, 
 
 
 
+#### 기본값 ####
+def profile(name, age, main_lang):
+    print("이름 : {0}\t나이 : {1}\t주 사용 언어: {2}".format(name, age, main_lang))
+
+profile("유재석", 20, "파이썬")   # 이름 : 유재석   나이 : 20       주 사용 언어: 파이썬
+profile("김태호", 25, "자바")    # 이름 : 김태호   나이 : 25       주 사용 언어: 자바 
+
+# 같은 학교 같은 학년 같은 반 같은 수업.
+
+
+def profile(name, age = 17, main_lang = "파이썬"):   # age와 main_lang에 기본값 지정 
+    print("이름 : {0}\t나이 : {1}\t주 사용 언어: {2}".format(name, age, main_lang))
+
+profile("유재석")  # 이름 : 유재석   나이 : 17       주 사용 언어: 파이썬
+profile("김태호")  # 이름 : 김태호   나이 : 17       주 사용 언어: 파이썬
+
+
+
+#### 키워드값 ####
+def profile(name, age, main_lang):
+    print(name, age, main_lang)
+
+profile(name = "유재석", main_lang = "파이썬", age = 20)  # 유재석 20 파이썬
+profile(main_lang = "자바", name = "김태호", age = 20)   # 김태호 20 자바
+
+
+
+#### 가변인자 ####
+# def profile(name, age, lang1, lang2, lang3, lang4, lang5):
+#     print("이름 : {0}\t나이 : {1}\t".format(name, age), end = " ")  # end = " " 이렇게 끝내놓으면 문장이 끝났을때 자동 줄바꿈을 하지않고 동일한 줄에서 아래의 코드를 실행한다는것을 의미한다.
+#     print(lang1, lang2, lang3, lang4, lang5)
+# 만약 위의 코드를 사용하다가 아래의 경우처럼 할수 있는 언어가 5개보다 적거나 많을경우 그때 마다 함수를 고쳐줘야하는 문제점이있다. 이럴때 사용할 수 있는게 가변인자를 이용하는 것이다.
+
+def profile(name, age, *language):
+    print("이름 : {0}\t나이 : {1}\t".format(name, age), end = " ")  # end = " " 이렇게 끝내놓으면 문장이 끝났을때 자동 줄바꿈을 하지않고 동일한 줄에서 아래의 코드를 실행한다는것을 의미한다.
+    for lang in language:
+        print(lang, end = " ")
+    print()
+
+
+
+profile("유재석", 20, "Python", "Java", "C", "C++", "C#", "Javascript")    # 이름 : 유재석   나이 : 20        Python Java C C++ C#
+# 이름 : 유재석   나이 : 20        Python Java C C++ C# Javascript 
+profile("김태호", 25, "kotlin", "Swift")         # 이름 : 김태호   나이 : 25        kotlin Swift   
+# 이름 : 김태호   나이 : 25        kotlin Swift 
+
+
+
+
+#### 지역변수와 전역변수 ####
+# 1. 전역변수와 지역변수가 각각 따로 정의됐을때
+gun = 10     # 전역변수
+
+def  checkpoint(soldiers): # 경계근무
+    gun = 20                         # 지역변수 만약 이 코드를 쓰지않은상태에서 실행을 하려고 하면 오류가 뜬다.
+    gun = gun - soldiers
+    print("[함수 내] 남은 총 : {0}".format(gun))
+
+
+print("전체 총 : {0}".format(gun))   # 전체 총 : 10
+checkpoint(2) # 2명이 경계 근무 나감    # [함수 내] 남은 총 : 18
+print("남은 총 : {0}".format(gun))   # 남은 총 : 10
+
+
+
+# 2. 전역변수를 함수내부로 끌고와서 변수로 사용했을때
+gun = 10     # 전역변수
+
+def  checkpoint(soldiers): # 경계근무
+    global gun     # 전역 공간에 있는 gun을 checkpoint 함수 내부에서 사용하겠다는것을 의미한다.
+    gun = gun - soldiers
+    print("[함수 내] 남은 총 : {0}".format(gun))
+
+
+print("전체 총 : {0}".format(gun))   # 전체 총 : 10
+checkpoint(2) # 2명이 경계 근무 나감    # [함수 내] 남은 총 : 8
+print("남은 총 : {0}".format(gun))   # 남은 총 : 8
+
+
+
+# 전역변수를 많이 사용하는것은 코드의 유지보수도 어려워질뿐더러 오류의 위험이 올라가기때문에 권장되지 않는다.
+# 함수의 전달값(파라미터)으로 보내서 계산을 하고 반환값을 받아서 사용하는 방법
+gun = 10     # 전역변수
+
+def checkpoint_ret(gun, soldiers):
+    gun = gun - soldiers
+    print("[함수 내] 남은 총 : {0}".format(gun))
+    return gun
+
+print("전체 총 : {0}".format(gun))   # 전체 총 : 10
+gun = checkpoint_ret(gun, 2)       # [함수 내] 남은 총 : 8
+print("남은 총 : {0}".format(gun))   # 남은 총 : 8
+
+
+
+
+
+
+# 퀴즈6  (7-7)
+
+def std_weight(height,gender):
+    if gender == "남자":
+        return print("키 {0}cm 남자의 표준 체중은 {1}kg 입니다.".format(height, round(((((0.01 * height) ** 2) * 22)),2)))
+    elif gender == "여자":
+        return print("키 {0}cm 여자의 표준 체중은 {1}kg 입니다.".format(height, round(((((0.01 * height) ** 2) * 21)),2)))
+
+std_weight(300, "남자")
+
+
+
+# 표준 체중을 소수점 둘째 자리까지 구해주는 별도의 함수 작성
+def std_weight(height,gender):
+    weight = 0
+    if gender == "남자":
+        weight = (((0.01 * height) ** 2) * 22)
+        return round(weight, 2)
+        
+    elif gender == "여자":
+        weight = (((0.01 * height) ** 2) * 21)
+        return round(weight, 2)
+
+print("키 {0}cm {1}의 표준 체중은 {2}kg 입니다.".format(168, "남자", std_weight(168, "남자")))
+
+
+
+
+
+#### 표준입출력 ####
+# sep 를 이용하면 , 를 했을때 한칸씩 떨어져서 출력되는기능대신 다른기능을 추가할 수 있다.
+print("Python" + "Java")   # PythonJava
+print("Python","Java")     # Python Java
+print("Python","Java", sep = ",")     # Python,Java
+print("Python","Java", sep = "vs")    # PythonvsJava
+print("Python","Java", sep = " vs ")  # Python vs Java
+
+# end =" "를 이용해서 문장의 마지막을 어떻게 처리할것인지를 결정 할 수 있다. 원래는 항상 줄바꿈 이지만 비어놓거나, 명시적으로 적어서 다른 것을 출력할수있다.
+print("Python","Java", sep = ",", end = "?")  
+print("무엇이 더 재밌을까요?")   # Python,Java?무엇이 더 재밌을까요?
+
+import sys
+print("Python", "Java", file = sys.stdout)
+print("Python", "Java", file = sys.stderr)
+
+
+# ljust() 메서드를 이용해서 왼쪽으로 정렬을 시킬수있다 ()안에 들어간 정수만큼의 공간을 확보한다.
+scores = {"수학":0, "영어":50, "코딩":100}
+for subject, score in scores.items():  # items() 를 하면 subject에는 key를 scroe에는 value를 넘겨준다.
+    print(subject.ljust(8), str(score).rjust(4), sep=":")
+"""
+수학      :   0
+영어      :  50
+코딩      : 100
+"""
+
+
+# .zfill()을 이용해서 원하는 만큼의 공간을 만들수 있다.
+# 은행 대기순번표
+# 001, 002, 003, ....
+for number in range(1, 21):
+    print("대기번호 : " + str(number).zfill(3))
+"""
+대기번호 : 001
+대기번호 : 002
+대기번호 : 003
+대기번호 : 004
+대기번호 : 005
+대기번호 : 006
+대기번호 : 007
+대기번호 : 008
+대기번호 : 009
+대기번호 : 010
+대기번호 : 011
+대기번호 : 012
+대기번호 : 013
+대기번호 : 014
+대기번호 : 015
+대기번호 : 016
+대기번호 : 017
+대기번호 : 018
+대기번호 : 019
+대기번호 : 020
+"""
+
+
+# 입력
+## 여기서 주의해야 할점은 정수타입을 입력하나 문자열을 입력하나 둘다 잘 출력되기는 하지만 둘의 데이터 타입은 모두 str 로 동일하다는것이다.
+answer = input("아무 값이나 입력하세요 : ")
+print("입력하신값은 " + answer + "입니다")
