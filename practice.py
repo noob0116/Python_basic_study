@@ -108,6 +108,7 @@ from copyreg import constructor
 from http.client import MOVED_PERMANENTLY
 from itertools import count
 from math import *
+from multiprocessing.connection import answer_challenge
 import profile
 from ssl import _PasswordType
 print(ceil(3.14))    # 올림 4
@@ -795,7 +796,7 @@ print("키 {0}cm {1}의 표준 체중은 {2}kg 입니다.".format(168, "남자",
 
 #### 표준입출력 ####
 # sep 를 이용하면 , 를 했을때 한칸씩 떨어져서 출력되는기능대신 다른기능을 추가할 수 있다.
-print("Python" + "Java")   # PythonJava
+print("Python" + "Java")   # PythonJav
 print("Python","Java")     # Python Java
 print("Python","Java", sep = ",")     # Python,Java
 print("Python","Java", sep = "vs")    # PythonvsJava
@@ -813,7 +814,7 @@ print("Python", "Java", file = sys.stderr)
 # ljust() 메서드를 이용해서 왼쪽으로 정렬을 시킬수있다 ()안에 들어간 정수만큼의 공간을 확보한다.
 scores = {"수학":0, "영어":50, "코딩":100}
 for subject, score in scores.items():  # items() 를 하면 subject에는 key를 scroe에는 value를 넘겨준다.
-    print(subject.ljust(8), str(score).rjust(4), sep=":")
+    print(subject.ljust(8), str(score).rjust(4), sep=":")    # ljust, rjust 를 이용해서 빈공간을 이용할 수 있다.
 """
 수학      :   0
 영어      :  50
@@ -854,3 +855,74 @@ for number in range(1, 21):
 ## 여기서 주의해야 할점은 정수타입을 입력하나 문자열을 입력하나 둘다 잘 출력되기는 하지만 둘의 데이터 타입은 모두 str 로 동일하다는것이다.
 answer = input("아무 값이나 입력하세요 : ")
 print("입력하신값은 " + answer + "입니다")
+print(type(answer))  #  10을 입력했을 때 <class 'str'>
+
+answer = 10
+print(type(answer))  # answer의 값 자체를 10으로 했을때는 타입이 int가 된다.
+
+
+
+
+#### 다양한 출력 포맷 ####
+# 빈 자리는 빈공간으로 두고, 오른쪽 정렬의 하되, 총 10자리 공간을 확보
+print("{0: >10}".format(500))  #        500
+
+# 양수일 땐 +로 표시, 음수일 땐 -로 표시
+# 위의 예제와 동일한 코드에다가 10앞에 +를 붙여주면된다.
+print("{0: >+10}".format(500))   #      +500 
+print("{0: >+10}".format(-500))  #      -500
+
+# 왼쪽 정렬하고, 빈칸으로 _로 채움
+print("{0:_<+10}".format(500))   #+500______
+
+# 3자리 마다 콤마를 찍어주기
+print("{0:,}".format(1000000000000))   #1,000,000,000,000
+
+# 3자리 마다 콤마를 찍어주기, +- 부호도 붙이기
+print("{0:+,}".format(1000000000000))  #+1,000,000,000,000
+print("{0:+,}".format(-1000000000000)) #-1,000,000,000,000
+
+# 3자리 마다 콤마를 찍어주기, 부호도 부팅고, 자릿수도 확보(30자리)
+# 빈자리는 ^ 표시
+print("{0:^<+30,}".format(1000000000000000))   #+1,000,000,000,000,000^^^^^^^^
+
+# 소수점 출력
+print("{0:f}".format(5/3))  # 1.666667
+# 소수점을 특정 자리수 까지만 표시(소수점 3째 자리에서 반올림)
+print("{0:.2f}".format(5/3)) # 1.67
+
+
+
+#### 파일 입출력 ####
+score_file = open("score.txt", "w", encoding="utf8")   # w는 쓰기 파일로 생성한다는것을 의미한다.
+print("수학 : 0", file = score_file)
+print("영어 : 50", file = score_file)
+score_file.close()
+
+
+# .write를 통해서 작성할때는 자동적으로 줄바꿈이 되지 않기 때문에 명시적으로 적어줘야 한다.
+score_file = open("score.txt", "a", encoding = "utf8")   # 만약 여기에서도 w를 한다면, 덮어쓰기가 된다. a는 append를 의미하고, 추가작성을 원할때 사용할 수 있다.
+score_file.write("과학 : 80")
+score_file.write("\n코딩 : 100")
+score_file.close()
+
+
+score_file = open("score.txt", "r", encoding="utf8")   # r 은 읽기모드라는 뜻이다.
+print(score_file.read())  #.read()를 이용하면 파일내용의 전체를 읽어온다.
+score_file.close()
+"""
+수학 : 0
+영어 : 50
+과학 : 80
+코딩 : 100
+"""
+
+
+score_file = open("score.txt", "r", encoding="utf8")   
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+print(score_file.readline(), end = "")
+print(score_file.readline(), end = "")
+print(score_file.readline(), end = "")
+score_file.close()
+
+

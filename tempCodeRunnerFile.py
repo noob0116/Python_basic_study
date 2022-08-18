@@ -1,3 +1,8 @@
-# 입력
-answer = input("아무 값이나 입력하세요 : ")
-print("입력하신값은 " + answer + "입니다")
+score_file = open("score.txt", "r", encoding="utf8")   
+print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
+print(score_file.readline(), end = "")
+print(score_file.readline(), end = "")
+print(score_file.readline(), end = "")
+score_file.close()
+
+
