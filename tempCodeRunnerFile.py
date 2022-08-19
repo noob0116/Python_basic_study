@@ -1,8 +1,4 @@
-score_file = open("score.txt", "r", encoding="utf8")   
-print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
-print(score_file.readline(), end = "")
-print(score_file.readline(), end = "")
-print(score_file.readline(), end = "")
-score_file.close()
-
-
+for list in range(1,51):
+    list_file = open("{0}주차.txt".format(list), 'w', encoding = "utf8")
+    print("- {0} 주차 주간보고\n-부서 :\n이름 :\n업무 요약 :".format(list), file = list_file)
+list_file.close()

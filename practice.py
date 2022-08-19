@@ -918,11 +918,122 @@ score_file.close()
 """
 
 
+# 파일의 내용을 한 줄 씩 읽고 처리하는 방법
 score_file = open("score.txt", "r", encoding="utf8")   
 print(score_file.readline(), end = "") # 줄별로 읽기, 한 줄 읽고 커서는 다음 줄로 이동
 print(score_file.readline(), end = "")
 print(score_file.readline(), end = "")
 print(score_file.readline(), end = "")
 score_file.close()
+"""
+수학 : 0
+영어 : 50
+과학 : 80
+코딩 : 100
+"""
+
+# 위의 예제의 경우 4줄인걸 알고 실행 시킨거지만, 몇 줄인지 모를때는 아래와 같이 코드를 짤 수 있다.
+score_file = open("score.txt", "r", encoding = "utf8")
+while True:
+    line = score_file.readline()
+    if not line:
+        break
+    print(line,end = "")
+score_file.close()
+"""
+수학 : 0
+영어 : 50
+과학 : 80
+코딩 : 100
+"""
 
 
+# 리스트에 값을 다 넣어서 처리할 수도 있다.
+score_file = open("score.txt", "r", encoding = "utf8")
+lines = score_file.readlines() # list 형태로 저장
+for line in lines:
+    print(line, end="")
+score_file.close()
+"""
+수학 : 0
+영어 : 50
+과학 : 80
+코딩 : 100
+"""
+
+
+
+#### pickle ####
+# pickle.dump()를 이용해서 .pickle에 저장하는 방법
+import pickle
+profile_file = open("profile.pickle", "wb") # b는 binary를 의미하고 pickle을 쓰기 위해서는 항상 b를 정의해야한다. pickle에서는 encoding을 설정해줄 필요는 없다.
+profile = {"이름":"박명수", "나이": 30, "취미":["축구", "골프", "코딩"]}
+print(profile)
+pickle.dump(profile, profile_file) # profile에 있는 정보를 file에 저장
+profile_file.close()
+
+
+# pickle.load()를 이용해서 .pickle에서 정보를 가져오는 방법
+import pickle
+profile_file = open("profile.pickle", "rb")
+profile = pickle.load(profile_file) # file에 있는 정보를 profile 에 불러오기
+print(profile)   # {'이름': '박명수', '나이': 30, '취미': ['축구', '골프', '코딩']}
+profile_file.close()
+
+
+
+
+#### with ####
+# with 문을 사용하면 파일을 close 해 줄 필요 없이 자동으로 종료 해준다.
+import pickle
+
+with open("profile.pickle", "rb") as profile_file:  # 파일에 있는 데이ㅓ를 profile_file에 저장한다.
+    print(pickle.load(profile_file))  # profile_file에 있는 정보를 로드해서 출력한다.
+     # {'이름': '박명수', '나이': 30, '취미': ['축구', '골프', '코딩']}
+
+
+
+# pickle을 사용하지 않고 with를 사용해 파일을 읽고 쓰는방법
+with open("study.txt", "w", encoding = "utf8") as study_file: 
+    study_file.write("파이썬을 열심히 공부하고 있어요")
+
+with open("study.txt", "r", encoding = "utf8") as study_file:
+    print(study_file.read())   # 파이썬을 열심히 공부하고 있어요
+
+
+
+
+
+# 퀴즈 7 
+회사에서는 매주 1회 작성해야 하는 보고서가 있습니다.
+보고서는 항상 아래와 같은 형태로 출력되어야 합니다.
+
+- X 주차 주간보고 -
+부서 :
+이름 :
+업무 요약 :
+
+1주차부터 50주차까지의 보고서 파일을 만드는 프로그램을 작성
+조건 : 파일명은 '1주차.txt','2주차.txt',.....
+
+
+import pickle
+
+for list in range(1,51):
+    with open("{0}주차.txt".format(list), "r", encoding ="utf8") as list_file:
+        list_file.write("- {0} 주차 주간보고 -\n부서 : \n이름 : \n업무 요약 : ".format(list))
+
+
+
+
+
+score_file = open("score.txt", "w", encoding="utf8")   # w는 쓰기 파일로 생성한다는것을 의미한다.
+print("수학 : 0", file = score_file)
+print("영어 : 50", file = score_file)
+score_file.close()
+
+
+for list in range(1,51):
+list_file = open("{0}주차.txt".format(list), 'w', encoding = "utf8")
+print("- {0} 주차 주간보고\n-부서 :\n이름 :\n업무 요약 :".format(list), file = list_file)
+list_file.close()
